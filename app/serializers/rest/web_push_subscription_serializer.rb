@@ -4,7 +4,7 @@ class REST::WebPushSubscriptionSerializer < ActiveModel::Serializer
   attributes :id, :endpoint, :alerts, :server_key
 
   def alerts
-    object.data&.dig('alerts') || {}
+    (object.data&.dig('alerts') || {}).reduce({}) { |hash, (k, v)| hash[k] = ActiveModel::Type::Boolean.new.cast(v); hash }
   end
 
   def server_key
