@@ -42,6 +42,7 @@ config/deploy/*
 postgres
 redis
 elasticsearch
+pgbouncer
 
 # Ignore Apple files
 .DS_Store
@@ -62,3 +63,6 @@ ubuntu-xenial-16.04-cloudimg-console.log
 
 # Ignore Docker option files
 docker-compose.override.yml
+
+local/letsencrypt/live/mstdn-amadeus.tech
+local/sites-available/*copy.conf

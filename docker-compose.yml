@@ -1,15 +1,52 @@
 version: '3'
 services:
 
-  db:
+  db_backend:
     restart: always
-    image: postgres:9.6-alpine
+#    image: postgres:11.6-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
     networks:
+#      - external_network
       - internal_network
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
     volumes:
       - ./postgres:/var/lib/postgresql/data
+
+#  db:
+#    restart: always
+#    image: pgbouncer/pgbouncer
+#    networks:
+#     - internal_network      
+#    environment:
+#      DATABASES_HOST: db_backend
+#      DATABASES_USER: mastodon
+#      DATABASES_DBNAME: mastodon
+#      DATABASES_PASSWORD: 4v6mFKNy6R
+#      DATABASES_PORT: 5432
+#      #PGBOUNCER_LOGFILE: /var/log/pgbouncer/pgbouncer.log
+#      #PGBOUNCER_PIDFILE: /var/run/pgbouncer/pgbouncer.pid
+#      #PGBOUNCER_LISTEN_ADDR: 127.0.0.1
+#      PGBOUNCER_LISTEN_PORT: 6432
+#      #PGBOUNCER_UNIX_SOCKET_DIR: /var/run/postgresql
+#      PGBOUNCER_AUTH_TYPE: md5
+#      PGBOUNCER_AUTH_FILE: /etc/pgbouncer/userlist.txt
+#      PGBOUNCER_ADMIN_USERS: pgbouncer
+#      PGBOUNCER_DEFAULT_POOL_SIZE: 20
+#      PGBOUNCER_RESERVE_POOL_SIZE: 3
+#      PGBOUNCER_MAX_CLIENT_CONN: 2048
+#      PGBOUNCER_POOL_MODE: transaction
+#      PGBOUNCER_SERVER_IDLE_TIMEOUT: 30
+#   volumes:
+#     - ./pgbouncer:/etc/pgbouncer
+#   ports:
+#     - "127.0.0.1:6432:6432"
+#   depends_on:
+#     - db_backend
+#   healthcheck:
+#     test: ps aux | grep -v grep | grep pgbouncer
 
   redis:
     restart: always
@@ -34,7 +71,7 @@ services:
 #      - ./elasticsearch:/usr/share/elasticsearch/data
 
   web:
-    build: .
+#    build: .
     image: tootsuite/mastodon
     restart: always
     env_file: .env.production
@@ -47,14 +84,15 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
-      - db
+      - db_backend    
+#      - db
       - redis
 #      - es
     volumes:
       - ./public/system:/mastodon/public/system
 
   streaming:
-    build: .
+#    build: .
     image: tootsuite/mastodon
     restart: always
     env_file: .env.production
@@ -67,17 +105,19 @@ services:
     ports:
       - "127.0.0.1:4000:4000"
     depends_on:
-      - db
+      - db_backend    
+#      - db
       - redis
 
   sidekiq:
-    build: .
+#    build: .
     image: tootsuite/mastodon
     restart: always
     env_file: .env.production
     command: bundle exec sidekiq
     depends_on:
-      - db
+      - db_backend    
+#      - db
       - redis
     networks:
       - external_network
@@ -100,6 +140,24 @@ services:
 #    networks:
 #      - external_network
 #      - internal_network
+
+## For local development
+  nginx:
+    build:
+      context: .
+      dockerfile: local/Dockerfile.nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+      - streaming
+    networks:
+      - external_network
+      - internal_network
+    volumes:
+      - ./local/letsencrypt:/etc/letsencrypt:ro
+      - ./local/sites-available:/etc/nginx/sites-available:ro
 
 networks:
   external_network:

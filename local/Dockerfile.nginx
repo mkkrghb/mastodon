@@ -1,0 +1,6 @@
+FROM nginx:1.17.6-alpine
+COPY ./local/nginx/nginx.conf /etc/nginx/
+RUN mkdir /etc/nginx/sites-enabled && \ 
+    cd /etc/nginx/sites-enabled/ && \
+    ln -s /etc/nginx/sites-available/mstdn-amadeus.tech.conf dev.mstdn-amadeus.tech && \
+    adduser -u 82 -D -S -G www-data www-data
