@@ -42,6 +42,7 @@
 /postgres
 /redis
 /elasticsearch
+/pgbouncer
 
 # ignore Helm lockfile, dependency charts, and local values file
 /chart/Chart.lock
@@ -67,3 +68,5 @@ yarn-debug.log
 
 # Ignore Docker option files
 docker-compose.override.yml
+
+local/sites-available/*copy.conf
