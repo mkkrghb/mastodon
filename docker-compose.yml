@@ -24,7 +24,7 @@ services:
 #      DATABASES_HOST: db_backend
 #      DATABASES_USER: mastodon
 #      DATABASES_DBNAME: mastodon
-#      DATABASES_PASSWORD: 4v6mFKNy6R
+#      DATABASES_PASSWORD: your_db_password
 #      DATABASES_PORT: 5432
 #      #PGBOUNCER_LOGFILE: /var/log/pgbouncer/pgbouncer.log
 #      #PGBOUNCER_PIDFILE: /var/run/pgbouncer/pgbouncer.pid
