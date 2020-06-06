@@ -4,6 +4,7 @@ services:
   db_backend:
     restart: always
 #    image: postgres:11.6-alpine
+    shm_size: 256mb
     build:
       context: .
       dockerfile: Dockerfile.postgres
@@ -50,7 +51,7 @@ services:
 
   redis:
     restart: always
-    image: redis:5.0-alpine
+    image: redis:6.0-alpine
     networks:
       - internal_network
     healthcheck:
