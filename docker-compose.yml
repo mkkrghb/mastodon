@@ -20,7 +20,7 @@ services:
 #    restart: always
 #    image: pgbouncer/pgbouncer
 #    networks:
-#     - internal_network      
+#     - internal_network
 #    environment:
 #      DATABASES_HOST: db_backend
 #      DATABASES_USER: mastodon
@@ -40,14 +40,14 @@ services:
 #      PGBOUNCER_MAX_CLIENT_CONN: 2048
 #      PGBOUNCER_POOL_MODE: transaction
 #      PGBOUNCER_SERVER_IDLE_TIMEOUT: 30
-#   volumes:
-#     - ./pgbouncer:/etc/pgbouncer
-#   ports:
-#     - "127.0.0.1:6432:6432"
-#   depends_on:
-#     - db_backend
-#   healthcheck:
-#     test: ps aux | grep -v grep | grep pgbouncer
+#    volumes:
+#      - ./pgbouncer:/etc/pgbouncer
+#    ports:
+#      - "127.0.0.1:6432:6432"
+#    depends_on:
+#      - db_backend
+#    healthcheck:
+#      test: ps aux | grep -v grep | grep pgbouncer
 
   redis:
     restart: always
@@ -92,7 +92,7 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
-      - db_backend    
+      - db_backend
 #      - db
       - redis
 #      - es
@@ -113,7 +113,7 @@ services:
     ports:
       - "127.0.0.1:4000:4000"
     depends_on:
-      - db_backend    
+      - db_backend
 #      - db
       - redis
 
@@ -124,7 +124,7 @@ services:
     env_file: .env.production
     command: bundle exec sidekiq
     depends_on:
-      - db_backend    
+      - db_backend
 #      - db
       - redis
     networks:
